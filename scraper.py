@@ -70,3 +70,41 @@ def buscar_noticias_do_g1():
         print(f"❌ Encontrei um erro inesperado: {erro_geral}")
     
     return None
+
+def salvar_dados(dados_das_noticias):
+    """
+    Pega a lista de notícias e salva tudo de forma organizada em um arquivo de texto.
+    """
+    if not dados_das_noticias:
+        print("Como não coletei dados, não há nada para salvar.")
+        return
+
+    nome_do_arquivo = "manchetes_g1.txt"
+    data_e_hora = datetime.datetime.now().strftime("%d/%m/%Y às %H:%M:%S")
+
+    try:
+        with open(nome_do_arquivo, 'w', encoding='utf-8') as arquivo:
+            arquivo.write(f"Manchetes do G1\n")
+            arquivo.write(f"Coletadas em: {data_e_hora}\n")
+            arquivo.write("="*40 + "\n\n")
+
+            for noticia in dados_das_noticias:
+                arquivo.write(f"Título: {noticia['titulo']}\n")
+                arquivo.write(f"Link: {noticia['link']}\n")
+                arquivo.write("-"*40 + "\n")
+
+        print(f"💾 Perfeito! Todas as notícias foram salvas no arquivo '{nome_do_arquivo}'")
+
+    except IOError as e:
+        print(f"❌ Tive um problema ao tentar criar o arquivo: {e}")
+
+# --- Programa ---
+
+if __name__ == "__main__":
+    
+    # Inicializa para buscar as notícias do G1
+    noticias = buscar_noticias_do_g1()
+    
+    # Caso retorne noticias, salva elas em um arquivo
+    if noticias:
+        salvar_dados(noticias)
