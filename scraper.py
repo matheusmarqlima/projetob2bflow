@@ -29,3 +29,44 @@ def buscar_noticias_do_g1():
     }
 
     print("🚀 Olá! Começando a buscar as últimas notícias no G1...")
+    
+    try:
+        # Vamos tentar "visitar" a página. Tempo de 10 segundos para o site responder
+        resposta = requests.get(url_alvo, headers=cabecalhos, timeout=10)
+        
+        # Se a resposta for um código de erro, paramos aqui.
+        resposta.raise_for_status()
+
+        # Agora, entregamos o HTML da página para o BeautifulSoup
+        pagina_organizada = BeautifulSoup(resposta.content, 'html.parser')
+
+        # Identificamos onde estão as manchetes que queremos.
+        lista_de_manchetes = pagina_organizada.find_all('a', class_='feed-post-link')
+
+        if not lista_de_manchetes:
+            print("⚠️ Puxa, não encontrei nenhuma manchete onde eu costumava procurar.")
+            print("Pode ser que a estrutura do site G1 tenha mudado.")
+            return None
+
+        noticias_coletadas = []
+        for manchete in lista_de_manchetes:
+            titulo = manchete.get_text(strip=True)  # Pega o texto limpo do link
+            link = manchete['href']                 # Pega o endereço do link
+            
+            # Guarda a noticia se tiver título e link
+            if titulo:
+                noticias_coletadas.append({'titulo': titulo, 'link': link})
+
+        print(f"✅ Sucesso! Encontrei {len(noticias_coletadas)} notícias fresquinhas.")
+        return noticias_coletadas
+        # Em caso de erro do site
+    except requests.exceptions.HTTPError as erro:
+        print(f"❌ Problema de HTTP: {erro}. A página pode estar fora do ar ou a URL mudou.")
+    except requests.exceptions.ConnectionError:
+        print("❌ Problema de Conexão. Parece que você está sem internet. Pode verificar?")
+    except requests.exceptions.Timeout:
+        print("❌ O site demorou demais para responder. Tente novamente mais tarde.")
+    except Exception as erro_geral:
+        print(f"❌ Encontrei um erro inesperado: {erro_geral}")
+    
+    return None
