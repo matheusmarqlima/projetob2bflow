@@ -28,7 +28,7 @@ Para rodar este projeto em sua máquina local, siga os passos abaixo.
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/seu-usuario/desafio-b2bflow.git](https://github.com/seu-usuario/desafio-b2bflow.git)
+    git clone [https://github.com/matheusmarqlima/desafio-b2bflow.git](https://github.com/matheusmarqlima/desafio-b2bflow.git)
     ```
 
 2.  **Navegue até o diretório do projeto:**
